@@ -1,0 +1,380 @@
+== README
+
+This README would normally document whatever steps are necessary to get the
+application up and running.
+
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
+
+
+Please feel free to use a different markup language if you do not plan to run
+<tt>rake doc:app</tt>.
+
+
+---Added gems to Gemfile
+gem 'bootstrap-sass'		  	# bootstrap framework
+gem 'simple_form', '>= 3.0.0.rc'
+gem 'devise', '3.0.0rc' # Authentication solution
+gem 'rolify' # rolify gem to handle user roles
+gem 'cancan' # cancan to handle authroization
+gem 'gravatar-ultimate' # Gravatar gem 
+
+group :development, :test do
+	# Use sqlite3 as the database for Active Record
+	gem 'sqlite3'
+	gem 'capistrano'			# interation testing tools for rack based web application
+	gem 'factory_girl_rails' 	# fixtures replacement
+	gem 'faker'					# generate fake data 
+end
+
+group :production do
+	gem 'pg'
+	gem 'rails_12factor'
+end
+
+-- Added User Model
+$ rails g devise:install
+$ rails g devise User
+
+      invoke  active_record
+      create    db/migrate/20130909171725_devise_create_users.rb
+      create    app/models/user.rb
+      invoke    test_unit
+      create      test/models/user_test.rb
+      invoke      factory_girl
+      create        test/factories/users.rb
+      insert    app/models/user.rb
+       route  devise_for :users
+
+-- Add display_name columns to User model
+	Added 
+	t.string :display_name, :default => ""
+	to 20130909171725_devise_create_users.rb
+
+$ rake db:migrate	
+-- Generated devise views files
+$ rails g devise:views devise
+
+
+-- Modified routes
+match '*path(.:format)', :to => 'application#not_found', via: :all
+
+-- Added not_found on controllers\application_controller.rb
+
+  rescue_from ActiveRecord::RecordNotFound, :with => :not_found
+  rescue_from AbstractController::ActionNotFound, :with => :not_found
+  rescue_from ActionController::RoutingError, :with => :not_found
+  def not_found
+    show_error('Object is not found!')
+  end
+
+  def show_error(msg='Object does not exist!')
+    flash[:notice] = msg
+    redirect_to root_path
+  end
+
+-- Generate contact Model
+$ rails g scaffold contact first_name:string middle_name:string last_name:string suffix:string company:string department:string job_title:string business_street:string business_city:string business_state:string business_zipcode:string business_fax:string business_phone:string business_phone2:string company_phone:string home_phone:string mobile_phone:string other_phone:string email:string website:string
+
+
+-- Added import form inside of views\contacts\index.html.erb to point to import_contacts_path
+
+
+-- Added CSV import process to upload contact information to db
+
+-- Added roles using rolify gem
+-- Generated the Role class from rolify
+$ rails g rolify:role Role User
+# this will generated following files
+      create  app/models/role.rb
+      insert  app/models/user.rb
+      create  config/initializers/rolify.rb
+      create  db/migrate/20130910133121_rolify_create_roles.rb
+$ rake db:migrate
+
+-- Added cancan gem for authorization
+-- Generated ability.rb file
+$ rails g cancan:ability # this will generated models\ability.rb file
+
+-- Generated home controller
+$ rails g controller home index
+
+-- Updated config\rountes.rb to set root to home#index
+
+-- Generate Post model with user_id, and contact_id as references
+$ rails g scaffold post user:references contact:references title:string body:text
+
+-- Generate Comment model with user_id, and post_id as references
+$ rails g scaffold comment post:references user:references body:text
+
+-- Heroku create
+$ git init
+$ git commit -m "initial"
+$ heroku login
+$ heroku create
+$ git remote -v
+  heroku  git@heroku.com:enigmatic-harbor-6938.git (fetch)
+  heroku  git@heroku.com:enigmatic-harbor-6938.git (push)
+
+-- renaming heroku app name # "https://devcenter.heroku.com/articles/renaming-apps"
+$ heroku apps:rename newname
+$ heroku apps:rename dmsbcm # rename from 'enigmatic-harbor-6938' to 'dmsbcm'
+
+$ git remote rm heroku
+
+$ git push heroku master # push to heroku
+
+$ heroku run rake db:migrate
+$ heroku run rake db:seed
+
+-- restart heroku application
+$ heroku restart
+
+-- view heroku logs
+$ heroku logs
+$ heroku logs -n 1500 #
+$ heroku logs -t 
+$ heroku logs --tail
+
+-- heroku database backup
+$ heroku pgbackups:capture
+
+-- LIKE is case-sensitive operator in Postgres
+Updated search method and replace or "like" to "LIKE" and convert all column name to lowercase, as well as search value to lowercase
+
+joins(:contact, :user).where(['LOWER(posts.title) LIKE ? or LOWER(posts.body) LIKE ? or LOWER(contacts.first_name) LIKE ? or LOWER(contacts.last_name) LIKE ? or LOWER(contacts.company) LIKE ? or LOWER(users.display_name) LIKE ?', "%#{search.downcase}%", "%#{search.downcase}%", "%#{search.downcase}%" , "%#{search.downcase}%", "%#{search.downcase}%", "%#{search.downcase}%"]).order('created_at DESC')
+
+-- Added roo gem and require 'iconv' to support upload csv and spreadsheet
+-- Updated models\contact.rb
+def self.import(file)
+  spreadsheet = open_spreadsheet(file)
+  header = spreadsheet.row(1)
+  (2..spreadsheet.last_row).each do |i|
+    row = Hash[[header, spreadsheet.row(i)].transpose]
+  end
+end
+
+def self.open_spreadsheet(file)
+  case File.extname(file.original_filename)
+    when ".csv" then Roo::CSV.new(file.path)
+    when ".xls" then Roo::Excel.new(file.path,nil,:ignore)
+    when ".xlxs" then Roo::Excelx.new(file.path,nil,:ignore)
+    else raise "Unknown file type #{file.origianl_filename}"
+  end
+end
+
+-- Generated migration script to add user_id to contact model
+$ rails g migration add_user_id_to_contact user:references
+
+-- Modified controllers\application_controller.rb to add accessable to current_user, which this is not the right way to do that, but will refactory later
+
+-- Added search method on contact model, as well as added user_id to contact model to display different user's contact list.
+
+
+-- Heroku database reset steps
+1. heroku pg:reset DATABASE
+
+2. heroku run rake db:migrate
+
+3. heroku run rake db:seed
+
+-- Check if params exist
+params[:user_id].nil? => if does not exist it will return "true"
+params[:user_id].present? => if does not exist it will return "false"
+
+
+-- Display 3 columns per row
+<table>
+  <tr>
+  <% @contacts.each_with_index do |t,i| %>
+    <% i = i+1 %>
+    <td><%= render :partial => 'data', locals: {contact: t} %></td>
+    <% if (i % 3).zero? %></tr><tr><% end %>
+  <% end  %>
+</table>
+
+-- Display 3 div per row (based on the width of main container px/3)
+  <% @contacts.each do |contact| %>
+    <div style="float:left;width=300px;"><%= render :partial => 'data', locals: {contact: contact} %></div>
+  <% end  %>
+
+-- Added pagination on contact list page
+-- Added gem  'kaminari' for pagination
+-- Generated kaminari configuration file
+$ rails g kaminari:config
+
+-- Added infinite page (endless page)
+-- Added views\contacts\index.js.erb
+$('#contact_list').append('<%= j render :partial => "datalist" %>');
+$('.pagination').replaceWith('<%= j paginate(@contacts) %>');
+if ($('.pagination .next').length ==0)
+  $('.pagination').hide()
+
+-- Modified controllers\contacts_controller.rb to add format.js under index, that will it will trigger index.js.erb
+
+-- Modified assets\javascripts\contacts.js.coffee
+jQuery ->
+  if $('.pagination').length
+    $(window).scroll ->
+      url = $('.pagination .next > a').attr('href')
+      if url && $(window).scrollTop() > $(document).height() - $(window).height() - 150
+        $('.pagination').text("Fetching more records ...")
+        $.getScript(url)
+      $(window).scroll
+
+-- Added pagination for post model
+
+-- Added contact type model to assoicate with post model
+$ rails g scaffold contact_type name:string
+
+-- Generated migration script to add contact_type_id and contact_date, action item, and complete
+$ rails g migration add_contact_type_date_action_complete_to_post contact_type:references contact_date:date action_item:text complete:boolean
+
+-- Generate migration script to add contact_type to posts table
+$ rails g migration add_contact_type_to_post contact_type:references
+
+-- Update migration script to set complete:boolean to default: false
+add_column :posts, :complete, :boolean, default: false
+
+-- http://stackoverflow.com/questions/6118779/how-to-change-default-timezone-for-activerecord-in-rails3
+-- Set default time zone to Eastern Time (US & Canada) in config\application.rb
+config.time_zone = 'Eastern Time (US & Canada)'
+config.active_record.default_timezone = :local
+
+-- Added Users controller to allow Edit user information
+$ rails g controller Users index new create edit update
+
+-- Updated config\routes.rb for User controller routes, as well as modified devices routes
+# make sure the resources :users is after devise_for :users 
+  
+  devise_for :users, :controllers => {:registrations => 'registrations'}
+  resources :users, :only => [:index, :update, :new, :create, :edit, :destroy]
+  
+-- Updated controllers\users_controller.rb
+before_action :authenticate_user!, :is_admin?
+
+
+-- Added registration controller 
+$ rails g controller registrations
+
+-- Updated registrations_controller.rb, added before_action 
+before_action :authenticate_user!
+
+-- Updated navigation bar to add user link
+
+-- Modified config\routes.rb to add routes exception handling
+ match '*path(.:format)', :to => 'application#not_found', via: :all
+
+-- Restricted User model for only admin to perform all actions, and restrict user to only able to update their own account
+1. Make sure the  devise routes is before resources :users
+2. Make sure in the User controller has 2 filters
+before_filter :is_admin, exept: [:edit, :update]
+before_filter :is_admin_or_owner, only: [:edit, :update]
+
+
+https://github.com/norman/friendly_id
+http://richonrails.com/articles/create-friendlier-looking-urls-with-friendlyid#.UjtfcMZeZ8E
+
+-- Added FriendlyId gem to all models
+gem 'friendly_id', '5.0.0.beta4' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
+
+$ rails generate friendly_id
+ create  db/migrate/20130919204819_create_friendly_id_slugs.rb
+ create  config/initializers/friendly_id.rb
+
+$ rake db:migrate
+
+-- Added Slug to Post model
+$ rails g migration AddSlugToPost
+$ rake db:migrate
+
+-- Edit app/models/post.rb
+extend FriendlyId
+friendly_id :title, use: :slugged
+
+-- If you are adding FriendlyId to an existing app and need to generate slugs for existing records, do this from the console, runner, or add a Rake task:
+> Post.finde_each(&:save)
+
+
+--Added FriendlyId to contact model
+
+-- Added migration script to add slug to contact
+$ rails g migration Add_Slug_to_Contact slug:string
+
+$ rake db:migrate
+
+-- Edit app/models/contact.rb
+extend FriendlyId
+friendly_id :full_name, use: :slugged
+
+def full_name
+  "#{first_name}-#{last_name}"  
+end
+
+-- Modified app/controllers/contact_controller.rb
+to replace @contact = Contact.find(params[:id]) to
+@contact = Contact.friendly.find(params[:id]) 
+
+-- Added FriendlyId to user model
+
+$ rails g migration add_Slug_to_user slug:string
+
+-- modified migration script to add index
+add_column :users, :slug, :string
+add_index :users, :slug, unique: true
+
+$ rake db:migrate
+
+-- Edit app/models/user.rb
+extend FriendlyId
+friendly_id :display_name, use: :slugged
+
+-- run this command in console to update existing records
+> User.find_each(&:save)
+
+-- edit app/controllers/users_controller.rb
+replace @user = User.find(params[:id]) to User.friendly.find(params[:id])
+
+-- Added github repository location using git remote
+-- frist create an empty repository at github and get the URL
+$ git remote add origin https://github.com/ycchen/dms-contact-manager.git
+$ git remote -v
+heroku  git@heroku.com:dmsbcm.git (fetch)
+heroku  git@heroku.com:dmsbcm.git (push)
+origin  https://github.com/ycchen/dms-contact-manager.git (fetch)
+origin  https://github.com/ycchen/dms-contact-manager.git (push)
+
+-- push to github
+$ git push -u origin master
+
+-- provided username at github and password
+
+https://github.com/Nerian/bootstrap-datepicker-rails
+-- Added bootstrap-datepicker-rails gem
+-- modified application.css to add
+ *= require bootstrap-datepicker
+-- modified application.js to add
+//= require bootstrap-datepicker
+
+-- Added $('#dp3').datepicker() to application.js
+
+## Turbolinks causes other JS works normally
+-- Added gem 'jquery-turbolinks' in the Gemfile
+-- Added //= require jquery.turbolinks in application.js

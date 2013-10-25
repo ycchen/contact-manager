@@ -1,0 +1,62 @@
+<div class="root">
+	<div class="row">
+		<div class="span12">
+			<div class="grey-box">
+				<div class="page-header">
+					 <h1 class="page-header-text">Users</h1>
+          			<% if current_user.admin? %><%= add_new_btn(new_user_path) %><% end %>
+				</div>
+				
+				<% if @users.any? %>
+					<div><strong><%= @users.size %></strong> <%= 'user'.pluralize(@users.size) %></div>	
+				<% end %>
+				
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>&nbsp;</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Role</th>
+							<th>Joined at</th>
+							<th>&nbsp;</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% @users.each do |user| %>
+							<tr>
+								<td><%= image_tag user.avatar, class: 'avatar' %></td>
+								<td><%= user.display_name.titleize %></td>
+								<td><%= user.email %></td>
+								<td><%= !user.roles.first.blank? ? user.roles.first.name : 'no role yet' %></td>
+								<td><%= l user.created_at, format: :short %></td>
+								<td>
+									<% if current_user.admin? %>	
+									<a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini" type="button">Change role</a>
+									<%= render :partial => 'role', locals: {user: user} %>
+									<% end %>
+								</td>
+								<td>
+									<% if current_user.id == user.id || current_user.admin? %>		
+									<div class="btn-group">
+										<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+											<i class="icon-edit icon-white"></i>Actions
+											<span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu">
+											<li><%= link_to '<i class="icon-edit"></i> Edit'.html_safe, edit_user_path(user) %></li>
+											<li class="divider"></li>
+											<li><%= link_to '<i class="icon-trash"></i> Delete'.html_safe, user_path(user), method: :delete, data: {confirm: 'Are you sure?'} %></li>
+										</ul>
+									</div>		
+									<% end %>
+								</td>
+							</tr>
+						<% end %>
+					</tbody>	
+				</table>
+			</div>
+	 	</div>
+	</div>
+</div>				

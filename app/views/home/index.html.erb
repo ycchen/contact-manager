@@ -1,0 +1,30 @@
+<div class="root">
+	<div class="row">
+		<div class="span12">
+			<div class="row">
+				<div class="span8">
+					<div class="grey-box">
+						<h3>Post</h3>
+						
+						<div id="recent_posts">
+							<%#= render :partial => 'recent_post' %>
+						</div>
+						
+					</div>
+				</div>
+				<div class="span4">
+					<!-- <div class='black-transparent-box'> -->
+					<div class='grey-box'>	
+						<h3>Welcome to DMS BCM</h3>
+						<hr />
+						<% 3.times do %>
+						<p><%= Faker::Lorem.paragraphs(2) %></p>
+						<% end %>
+					</div>
+					<!-- </div> -->
+			          	
+				</div>
+			</div>
+	 	</div>
+	</div>
+</div>

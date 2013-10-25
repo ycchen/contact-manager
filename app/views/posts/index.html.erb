@@ -1,0 +1,74 @@
+<div class="root">
+  <div class="row">
+    <div class="span12">
+      <div class="grey-box">
+        <div class="page-header">
+          <h1 class="page-header-text">Posts</h1>
+          <%= add_new_btn(new_post_path) %>
+        </div>
+        
+        <div class="tabbable">
+          <ul class="nav nav-pills">
+            <li class="active"><a href="#pane1" data-toggle="tab">All</a></li>
+            <li><a href="#pane2" data-toggle="tab">John</a></li>
+            <li><a href="#pane3" data-toggle="tab">Wayne</a></li>
+            <li><a href="#pane4" data-toggle="tab">Not Complete</a></li>
+          </ul>
+          
+          <div class="tab-content">
+            <div id="pane1" class="tab-pane active">
+               <table class="table table-condensed table-striped">
+                <%= render :partial => 'header' %>
+
+                <tbody>
+                  <% @posts.each do |post| %>
+                    <%= render :partial => 'data' , locals:{post:post} %>
+                  <% end %>
+                </tbody>
+              </table>
+
+            </div>
+            <div id="pane2" class="tab-pane">
+              <table class="table table-condensed table-striped">
+                <%= render :partial => 'header' %>
+
+                <tbody>
+                  <% Post.john.each do |post| %>
+                    <%= render :partial => 'data' , locals:{post:post} %>
+                  <% end %>
+                </tbody>
+              </table>
+              
+            </div>
+            <div id="pane3" class="tab-pane">
+              <table class="table table-condensed table-striped">
+                <%= render :partial => 'header' %>
+
+                <tbody>
+                  <% Post.wayne.each do |post| %>
+                    <%= render :partial => 'data' , locals:{post:post} %>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            <div id="pane4" class="tab-pane">
+              <table class="table table-condensed table-striped">
+                <%= render :partial => 'header' %>
+
+                <tbody>
+                  <% Post.not_complete.each do |post| %>
+                    <%= render :partial => 'data' , locals:{post:post} %>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div><!-- /tab-content -->
+        </div><!-- /tabbable -->
+
+          <br>
+
+          <%= link_to 'New Post', new_post_path %>
+      </div>      
+    </div>
+  </div>
+</div>

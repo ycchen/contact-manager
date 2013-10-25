@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="span8">
+		<div class="item-container-body">
+			<div class="item-header">
+				<img src="<%= comment.user.avatar %>" class="item-user-image"/>
+				<span class="item-header-user">
+					<a><%= comment.user.display_name %></a>
+				</span>
+				<span class="refeed-buttons"> </span>
+				<span class="points-container">
+			</div>
+
+			<br>
+			<span class="text-item-body"><%= comment.body %></span>
+			<div class=" item-footer">
+				<span class="raphael-icon post-logo">Posted</span>
+				<span class="item-time">
+					<%= distance_of_time_in_words_to_now(comment.created_at)%>
+				<span class="refeed-container"> </span>
+				</span>
+			</div>
+		</div>
+
+	</div>
+</div>

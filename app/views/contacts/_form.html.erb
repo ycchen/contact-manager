@@ -1,0 +1,97 @@
+<%= form_for(@contact) do |f| %>
+  <% if @contact.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@contact.errors.count, "error") %> prohibited this contact from being saved:</h2>
+
+      <ul>
+      <% @contact.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :first_name %><br>
+    <%= f.text_field :first_name %>
+  </div>
+  <div class="field">
+    <%= f.label :middle_name %><br>
+    <%= f.text_field :middle_name %>
+  </div>
+  <div class="field">
+    <%= f.label :last_name %><br>
+    <%= f.text_field :last_name %>
+  </div>
+  <div class="field">
+    <%= f.label :suffix %><br>
+    <%= f.text_field :suffix %>
+  </div>
+  <div class="field">
+    <%= f.label :company %><br>
+    <%= f.text_field :company %>
+  </div>
+  <div class="field">
+    <%= f.label :department %><br>
+    <%= f.text_field :department %>
+  </div>
+  <div class="field">
+    <%= f.label :job_title %><br>
+    <%= f.text_field :job_title %>
+  </div>
+  <div class="field">
+    <%= f.label :business_street %><br>
+    <%= f.text_field :business_street %>
+  </div>
+  <div class="field">
+    <%= f.label :business_city %><br>
+    <%= f.text_field :business_city %>
+  </div>
+  <div class="field">
+    <%= f.label :business_state %><br>
+    <%= f.text_field :business_state %>
+  </div>
+  <div class="field">
+    <%= f.label :business_zipcode %><br>
+    <%= f.text_field :business_zipcode %>
+  </div>
+  <div class="field">
+    <%= f.label :business_fax %><br>
+    <%= f.text_field :business_fax %>
+  </div>
+  <div class="field">
+    <%= f.label :business_phone %><br>
+    <%= f.text_field :business_phone %>
+  </div>
+  <div class="field">
+    <%= f.label :business_phone2 %><br>
+    <%= f.text_field :business_phone2 %>
+  </div>
+  <div class="field">
+    <%= f.label :company_phone %><br>
+    <%= f.text_field :company_phone %>
+  </div>
+  <div class="field">
+    <%= f.label :home_phone %><br>
+    <%= f.text_field :home_phone %>
+  </div>
+  <div class="field">
+    <%= f.label :mobile_phone %><br>
+    <%= f.text_field :mobile_phone %>
+  </div>
+  <div class="field">
+    <%= f.label :other_phone %><br>
+    <%= f.text_field :other_phone %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :website %><br>
+    <%= f.text_field :website %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

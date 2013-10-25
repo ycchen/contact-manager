@@ -1,0 +1,35 @@
+<% @contacts.each do |contact| %>
+	<div style="float:left;">
+		<div class="row">
+			<div class="span4">
+				<div class="item-container-small-body">
+					<div class="item-header">
+						<img src="<%= contact.avatar %>" class="item-user-image"/>
+						<span class="item-header-user"><%= link_to "#{contact.last_name},#{contact.first_name}", contact_path(contact) %></span>
+						<!-- <span class="refeed-buttons"></span> -->
+						<span class="points-container"><%= contact.user.display_name %></span>
+					</div>
+					<span class="text-item-body">
+						Phone: <%= contact.business_phone %><br/>
+						Mobile: <%= contact.mobile_phone %><br/>
+						Email: <a href="mailto:<%= contact.email %>"><%= contact.email %></a><br/>
+						Company: <%= contact.company %>
+					</span>
+					<div class="text-item-footer">
+						Posts:(<%= contact.posts.size %>)<% if contact.posts.size > 0 %> <%= link_to "view post", contactposts_path(contact.id) %><% end %>
+					</div>
+					<!-- 
+					<div class="item-footer">
+						<span class="raphael-icon post-logo">Posted</span>
+						<span class="item-time">
+							<%#= distance_of_time_in_words_to_now(contact.created_at)%>
+						</span>
+						<span class="refeed-container"></span>
+					</div>
+					 -->
+				</div>
+			</div>
+		</div>
+	</div>
+<% end  %>
+ <br style="clear: both;">

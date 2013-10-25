@@ -1,0 +1,13 @@
+<tr>
+  <td><%= post.user.display_name %></td>
+  <td><%= post.contact.last_name %>, <%= post.contact.first_name %></td>
+  <td><%= post.contact_date %></td>
+  <td><%= post.title %></td>
+  <td><%= post.contact_type.name %></td>
+  <td><%= post.body %></td>
+  <td><%= post.action_item %></td>
+  <td><%= post.complete ? 'Yes' : 'No' %></td>
+  <td><%= link_to 'Show', post, class: "btn btn-primary"%></td>
+  <td><%= link_to 'Edit', edit_post_path(post), class: "btn btn-primary" %></td>
+  <td><%= link_to 'Destroy', post, class: "btn btn-primary", method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>

@@ -1,0 +1,11 @@
+<% @contacts.each do |contact| %>
+  <tr>
+    <td><%= link_to "#{contact.last_name}, #{contact.first_name}", contact_path(contact) %></td>
+    <td><%= contact.company %></td>
+    <td><%= contact.business_phone %><br><a href="mailto:#{contact.email }"><%= contact.email %></a></td>
+    <td>(<%= contact.posts.size %>)<% if contact.posts.size > 0 %> <%= link_to "View", contactposts_path(contact.id) %><% end %></td>
+    <td><%#= link_to 'Show', contact, class: "btn btn-primary" %></td>
+    <td><%= link_to 'Edit', edit_contact_path(contact),class: "btn btn-primary"  %></td>
+    <td><%#= link_to 'Destroy', contact,class: "btn btn-primary" , method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>

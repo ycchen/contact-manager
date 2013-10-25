@@ -1,0 +1,64 @@
+<div class="root">
+	<div class="row">
+		<div class="span12">
+			<div class="row">
+				<div class="span8">
+					<div class="item-container-body">
+						<div class="item-header">
+							<img src="<%= @post.user.avatar %>" class="item-user-image"/>
+							<span class="item-header-user">
+								<%= @post.user.display_name %>
+							</span>
+							<span class="refeed-buttons"> </span>
+							<span class="points-container">
+						</div>
+
+						<br>
+						<span class="text-item-body">
+							<strong>Contact:</strong> <%= @post.contact.last_name %>, <%= @post.contact.first_name %><br/>
+							<strong>Contact date:</strong> <%= @post.contact_date.strftime("%m-%d-%Y") %><br/>
+							<strong>Contact type:</strong> <%= @post.contact_type.name %><br/>
+							<strong>Subject:</strong> <%= @post.title %><br/>
+							<strong>Phone:</strong> <%= @post.contact.business_phone %><br/>
+							<strong>Body:</strong> <%= @post.body %><br/>
+							<strong>Action items:</strong> <%= @post.action_item %><br/>
+							<strong>Action items complete?:</strong> <%= @post.complete? ? "Yes" : "No" %><br/>
+						</span>
+						<div class=" item-footer">
+							<span class="raphael-icon post-logo">Posted</span>
+							<span class="item-time">
+								<%= distance_of_time_in_words_to_now(@post.created_at)%>
+							<span class="refeed-container"> </span>
+							</span>
+						</div>
+					</div>
+
+					<h4>Comments (<%= @post.comments.size %>)</h4>
+
+					<%= render partial: 'posts/comment', collection: @post.comments.order('created_at DESC')  %>
+						
+					<%= render partial: 'comments/form' %>
+				</div>
+
+				<div class="span4">
+					<div class='item-container-body text-item-body'>	
+						<h3><%= @post.contact.last_name%>, <%= @post.contact.first_name%></h3>
+						<hr />
+						<p>Phone: <%= @post.contact.business_phone %></p>
+						<p>Mobile: <%= @post.contact.mobile_phone %></p>
+						<p>Company: <%= @post.contact.company %></p>
+						<p>Email: <%= @post.contact.email %></p>
+						<p>Total posts related to <%= @post.contact.last_name%>, <%= @post.contact.first_name%> 
+							(<%= link_to_unless(@post.contact.posts.size.nil?, 'view'+ "#{@post.contact.posts.size}", contactposts_path(@post.contact.id)) %>)</p>
+						<p></p>
+						<%# 3.times do %>
+						<p><%#= Faker::Lorem.paragraphs(2) %></p>
+						<%# end %>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+	
