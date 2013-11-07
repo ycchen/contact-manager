@@ -29,7 +29,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'bootstrap-sass'		  	# bootstrap framework
+gem 'bootstrap-sass', '2.3.2.2'		  	# bootstrap framework
 gem 'carrierwave'				# upload file gem
 gem 'simple_form', '>= 3.0.0.rc'
 gem 'devise', '3.0.0rc' 		# Authentication solution
@@ -42,6 +42,7 @@ gem 'faker'						# generate fake data
 gem 'kaminari'					#pagination
 gem 'bootstrap-datepicker-rails'
 gem 'friendly_id', '5.0.0.beta4'
+
 group :development, :test do
 	gem 'sqlite3'				# Use sqlite3 as the database for Active Record
 	gem 'capistrano'			# interation testing tools for rack based web application
