@@ -5,78 +5,87 @@
           <div class="page-header">
             <h1 class="page-header-text">Contacts</h1><%= add_new_btn(new_contact_path) %>
           </div>
-            <div class="import-area">
-              <h4>Import Contacts</h4>
-              <%= form_tag import_contacts_path, multipart: true do %>
-                <%= file_field_tag :file, :class => 'btn' %>
-                <%= submit_tag "Import" , :class => 'btn btn-primary' %>
+          <div>
+            <a href="javascript:void(0)" onclick="javascript:$('.import-area').slideToggle('slow')" class="btn btn-primary">Import Contacts</a>
+          </div>
+
+          <div class="import-area">
+            <h4>Import Contacts</h4>
+            <%= form_tag import_contacts_path, multipart: true do %>
+              <%= file_field_tag :file, :class => 'btn' %>
+              <%= submit_tag "Import" , :class => 'btn btn-primary' %>
+            <% end %>
+          </div>
+          
+          <br/>
+
+          <div>
+            <span style="float:left">
+              <%= link_to contacts_path(:user_id => 4,search: params[:search]), class: 'btn btn-primary btn-sm' do %>
+                John&nbsp;<span class="badge"><%= Contact.john.size %></span>
               <% end %>
+              <%= link_to contacts_path(:user_id => 5,search: params[:search]), class: 'btn btn-primary btn-sm' do %>
+                Wayne&nbsp;<span class="badge"><%= Contact.wayne.size %></span>
+              <% end %>
+
+            </span>
+            <span style="float:right; padding-left: 10px;">
+              Download:
+              <%= link_to('<i class="icon-file"></i>CSV'.html_safe, contacts_path(format:"csv"), params.merge(view: params[:view])) %> |
+              <%= link_to('<i class="icon-file"></i>Excel'.html_safe, contacts_path(format:"xls"))%>
+            </span>
+           
+            <span style="float:right; padding-left: 10px;">
+              &nbsp; View:
+              <%= link_to_unless(params[:view] == "list",'<i class="icon-list"></i>List'.html_safe, contacts_path(view: "list", search: params[:search]))%>
+              
+              <%= link_to_unless( params[:view] == "grid" || params[:view].nil? ,'<i class="icon-th"></i>Grid'.html_safe, contacts_path(view: "grid",search: params[:search]), params.merge(search: params[:search])) %>
+              
+            </span>
+          </div>
+          <div style="clear: both;"></div>
+          <br/>
+          <%#= @contacts.each do |contact| %>
+            <%#= render :partial => 'data', locals: {contact: contact} %>
+          <%# end %>
+
+          <%#= @contacts.each do |contact| %>
+            <%#= render :partial => 'data', locals: {contact: contact} %>
+          <%# end %>
+          
+          <%# @contacts.each_with_index do |tag, index| %>
+            <%#= index %>
+            <%#= "<br />" if (index % 5).zero? %>
+          <%# end %>
+          <%= params[:view].nil? %>
+          <% if params[:view].nil? %>
+            <div id="contact_list">
+              <%= render :partial => 'datalist' %>
             </div>
-        <div>
-          <span style="float:left">
-            <%= link_to contacts_path(:user_id => 4,search: params[:search]), class: 'btn btn-primary btn-sm' do %>
-              John&nbsp;<span class="badge"><%= Contact.john.size %></span>
-            <% end %>
-            <%= link_to contacts_path(:user_id => 5,search: params[:search]), class: 'btn btn-primary btn-sm' do %>
-              Wayne&nbsp;<span class="badge"><%= Contact.wayne.size %></span>
-            <% end %>
+          <% elsif params[:view]== "list" %>
+            <table class="table table-condensed table-bordered" id="contact_list">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Phone/Email</th>
+                  <th>Post</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
 
-          </span>
-          <span style="float:right; padding-left: 10px;">
-            Download:
-            <%= link_to('<i class="icon-file"></i>CSV'.html_safe, contacts_path(format:"csv"), params.merge(view: params[:view])) %> |
-            <%= link_to('<i class="icon-file"></i>Excel'.html_safe, contacts_path(format:"xls"))%>
-          </span>
-         
-          <span style="float:right; padding-left: 10px;">
-            &nbsp; View:
-            <%= link_to_unless( params[:view] == "grid" || params[:view].nil? ,'<i class="icon-th"></i>Grid'.html_safe, contacts_path(view: "grid",search: params[:search]), params.merge(search: params[:search])) %>
-            <%= link_to_unless(params[:view] == "list",'<i class="icon-list"></i>List'.html_safe, contacts_path(view: "list", search: params[:search]))%>
-          </span>
-        </div>
-        <div style="clear: both;"></div>
-        <br/>
-        <%#= @contacts.each do |contact| %>
-          <%#= render :partial => 'data', locals: {contact: contact} %>
-        <%# end %>
-
-        <%#= @contacts.each do |contact| %>
-          <%#= render :partial => 'data', locals: {contact: contact} %>
-        <%# end %>
-        
-        <%# @contacts.each_with_index do |tag, index| %>
-          <%#= index %>
-          <%#= "<br />" if (index % 5).zero? %>
-        <%# end %>
-        <%= params[:view].nil? %>
-        <% if params[:view].nil? %>
-          <div id="contact_list">
-            <%= render :partial => 'datalist' %>
-          </div>
-        <% elsif params[:view]== "list" %>
-          <table class="table table-condensed table-bordered" id="contact_list">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Company</th>
-                <th>Phone/Email</th>
-                <th>Post</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <%= render :partial => 'tabledata'  %>
-            </tbody>
-          </table>
-        <% elsif params[:view] == "grid"%>
-          <div id="contact_list">
-            <%= render :partial => 'datalist' %>
-          </div>
-        <% end %>
-        <%= paginate @contacts %>
-        <%#= link_to 'New Contact', new_contact_path %>
+              <tbody>
+                <%= render :partial => 'tabledata'  %>
+              </tbody>
+            </table>
+          <% elsif params[:view] == "grid"%>
+            <div id="contact_list">
+              <%= render :partial => 'datalist' %>
+            </div>
+          <% end %>
+          <%= paginate @contacts %>
+          <%#= link_to 'New Contact', new_contact_path %>
         
       </div>      
     </div>

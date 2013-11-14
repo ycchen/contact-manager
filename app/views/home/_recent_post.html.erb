@@ -1,0 +1,52 @@
+
+<% @posts.each do |post| %>
+	<div class="row">
+		<div class="span7 well">
+			<div class="span1" style="margin-left: -3px">
+				<img src="<%= post.user.avatar %>"/>
+			</div>
+			<div class="span6">
+				<span class="text-message">
+					<span class="display-name"><%= post.user.display_name %></span><br/>
+
+					contacted <b><%= link_to "#{post.contact.last_name}, #{post.contact.first_name}", contact_path(post.contact) %></b>
+					on <b><%= post.contact_date %></b>, about {<b><%= post.title %></b>}. <br/>
+					Contacted by {<b>
+					<% case post.contact_type_id %>
+						<% when 1 then %>
+							<%= link_to "#{post.contact.business_phone} or #{post.contact.mobile_phone}", contact_path(post.contact) %>
+						<% when 2 then %>
+							<%= link_to "#{post.contact.email}", contact_path(post.contact) %>
+						<% when 3 then %>
+						<% else %>
+					<% end %>
+					</b>}
+					{<b><%= post.contact_type.name %></b>}<br/>
+					<b>Content:</b> 
+					<pre><%= post.body %></pre>
+					<b>Action items:</b><%= post.action_item %>
+				</span>
+			</div>
+
+			<div class="row">
+				<div class="span7 footerwell">
+					<span style="float: left;">
+						Posted: <%= time_ago_in_words(post.created_at) %>
+								<i>{<%= post.created_at.strftime("%m-%d-%Y %H:%M") %>}</i>
+					</span>
+					<span style="float: right;">
+						<%= link_to_unless(post.comments.empty?, pluralize(post.comments.size, 'comment'), post_path(post) )%>
+					</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span7 footerwell" style="background-color:#e3e3e3">
+					<span>
+						Tagged:
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<% end %>

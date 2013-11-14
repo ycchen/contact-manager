@@ -27,7 +27,8 @@ class CommentsController < ApplicationController
     # render params.inspect
     @comment = Comment.new(comment_params)
     @comment.user_id = current_user.id
-    @comment.post_id = params[:post_id]
+    @comment.post_id = Post.friendly.find(params[:post_id]).id
+
 
     respond_to do |format|
       if @comment.save

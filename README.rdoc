@@ -348,6 +348,7 @@ friendly_id :display_name, use: :slugged
 
 -- run this command in console to update existing records
 > User.find_each(&:save)
+> Posts.find_each(&:save)
 
 -- edit app/controllers/users_controller.rb
 replace @user = User.find(params[:id]) to User.friendly.find(params[:id])
@@ -378,3 +379,7 @@ https://github.com/Nerian/bootstrap-datepicker-rails
 ## Turbolinks causes other JS works normally
 -- Added gem 'jquery-turbolinks' in the Gemfile
 -- Added //= require jquery.turbolinks in application.js
+
+-- Added FriendlyId to comment model
+
+$ rails g migration add_Slug_to_comment slug:string
