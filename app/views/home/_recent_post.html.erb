@@ -1,10 +1,13 @@
 
 <% @posts.each do |post| %>
+	<div class="grey-box">
 	<div class="row">
 		<div class="span7 well">
+			
 			<div class="span1" style="margin-left: -3px">
 				<img src="<%= post.user.avatar %>"/>
 			</div>
+			
 			<div class="span6">
 				<span class="text-message">
 					<span class="display-name"><%= post.user.display_name %></span><br/>
@@ -35,7 +38,8 @@
 								<i>{<%= post.created_at.strftime("%m-%d-%Y %H:%M") %>}</i>
 					</span>
 					<span style="float: right;">
-						<%= link_to_unless(post.comments.empty?, pluralize(post.comments.size, 'comment'), post_path(post) )%>
+						<%#= link_to_unless(post.comments.empty?, pluralize(post.comments.size, 'comment'), post_path(post) )%>
+						<%= link_to( pluralize(post.comments.size, 'comment'), post_path(post) )%>
 					</span>
 				</div>
 			</div>
@@ -46,7 +50,8 @@
 					</span>
 				</div>
 			</div>
+
 		</div>
 	</div>
-
+</div><br/>
 <% end %>

@@ -21,14 +21,17 @@
 
           <div>
             <span style="float:left">
-              <%= link_to contacts_path(:user_id => 4,search: params[:search]), class: 'btn btn-primary btn-sm' do %>
-                John&nbsp;<span class="badge"><%= Contact.john.size %></span>
-              <% end %>
-              <%= link_to contacts_path(:user_id => 5,search: params[:search]), class: 'btn btn-primary btn-sm' do %>
-                Wayne&nbsp;<span class="badge"><%= Contact.wayne.size %></span>
-              <% end %>
+              <%# @contacts.joins(:user).group(:display_name,:user_id).count.each do |key, value| %>
 
+              <% Contact.user_count.count.each do |key, value| %>
+                
+                <%= link_to contacts_path(user_id: key[1],search: params[:search]), class: 'btn btn-primary btn-sm' do %>
+                  <%= key[0] %>&nbsp;<span class="badge"><%= value %></span>
+                <% end %>
+
+              <% end %>  
             </span>
+
             <span style="float:right; padding-left: 10px;">
               Download:
               <%= link_to('<i class="icon-file"></i>CSV'.html_safe, contacts_path(format:"csv"), params.merge(view: params[:view])) %> |

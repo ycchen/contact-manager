@@ -5,6 +5,7 @@ class Contact < ActiveRecord::Base
 
 	scope :john, lambda{where(user_id:4).order('last_name')}
 	scope :wayne, lambda{where(user_id:5).order('last_name')}
+	scope :user_count, lambda{joins(:user).group(:display_name, :user_id)}
 	
 	extend FriendlyId
 	friendly_id :full_name, use: :slugged

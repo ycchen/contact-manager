@@ -44,7 +44,7 @@
                       <p>Other phone:  <%= @contact.other_phone %></p>
                       <p>Email:  <a href="mailto:<%= @contact.email %>"><%= @contact.email %></a></p>
                       <%= link_to 'Edit', edit_contact_path(@contact), class: 'btn btn-primary' %> |
-              <%= link_to 'Back', contacts_path, class: 'btn btn-primary'%>
+                      <%= link_to 'Back', contacts_path, class: 'btn btn-primary'%>
                     </div>
                 </div>
               </div>
@@ -55,14 +55,18 @@
               <div class='grey-box'>  
                 <h3><%= @contact.last_name %>, <%= @contact.first_name %></h3>
                 <hr />
-                <% @contact.posts.order(contact_date: :desc).each do |post| %>
-                  <p>
-                  <%= post.contact_date.strftime("%m-%d-%Y") %> {<%= post.contact_date %>}<br/>
-                  <%= post.user.display_name %><br/>
-                  <%= post.contact_type.name %><br/>
-                </p>
-
-                <% end %>
+                <h4>Contact history</h4>
+                <span class="text-item-body">
+                  <ul>
+                  <% @contact.posts.order(contact_date: :desc).each do |post| %>
+                    <li>
+                      <%= link_to(post.contact_date, post_path(post) )%>
+                      by <%= post.user.display_name %>
+                      via <%= post.contact_type.name %>
+                    </li>
+                  <% end %>
+                  </ul>
+                </span>
   <!--               <% 3.times do %>
                   <p><%= Faker::Lorem.paragraphs(2) %></p>
                 <% end %> -->
